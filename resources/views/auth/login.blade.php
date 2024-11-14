@@ -13,27 +13,25 @@
         <div class="form sign-in">
             <h2>Welcome</h2>
             <label>
-                <span>Name</span>
-                <input type="text" name="name" required />
+                <span>User ID</span>
+                <input type="number" name="user_id" required />
             </label>
             <label>
-                <span>Age</span>
-                <input type="number" name="age" required />
+                <span>Name</span>
+                <input type="text" name="user_name" required />
             </label>
             <button type="button" class="submit">Sign In</button>
             <p style="text-align: center;">or</p>
-            <!-- Login as Guest Button -->
-            <button type="button" class="guest-btn">Login as Guest</button>
+            <!-- Login as Admin Button -->
+            <button type="button" class="guest-btn">Login as Admin</button>
         </div>
 
         <div class="sub-cont">
             <!-- Side Image and Text -->
             <div class="img">
                 <div class="img__text m--up">
-                  
                     <br><br>
                 </div>
-               
             </div>
         </div>
 
@@ -42,30 +40,30 @@
         <div class="modal-content">
             <span class="close">&times;</span>
             <h2>Welcome, <span id="userName"></span>!</h2>
-            <p>You have successfully signed in.</p>
+            <p>Your User ID is <span id="userId"></span>.</p>
         </div>
     </div>
 
     <!-- JavaScript -->
     <script>
-    // Redirect to the welcome page for guest login
+    // Redirect to the welcome page for admin login
     document.querySelector('.guest-btn').addEventListener('click', function() {
-        window.location.href = '/welcome?guest=true'; // Pass the guest parameter
+        window.location.href = '/admin'; // Redirect to admin page
     });
 
     // Handle the Sign In button click
     document.querySelector('.sign-in .submit').addEventListener('click', function() {
-        var name = document.querySelector('input[name="name"]').value;
-        var age = document.querySelector('input[name="age"]').value;
+        var userId = document.querySelector('input[name="user_id"]').value;
+        var userName = document.querySelector('input[name="user_name"]').value;
 
-        if (name.trim() !== "" && age.trim() !== "") {
-            // Redirect to the welcome page with the user's name and age
-            window.location.href = '/welcome?username=' + encodeURIComponent(name) + '&age=' + encodeURIComponent(age);
+        if (userId.trim() !== "" && userName.trim() !== "") {
+            // Redirect to the welcome page with the user's ID and name
+            window.location.href = '/welcome?user_id=' + encodeURIComponent(userId) + '&user_name=' + encodeURIComponent(userName);
         } else {
-            alert('Please enter both your name and age.');
+            alert('Please enter both your User ID and Name.');
         }
     });
-</script>
+    </script>
 
 </body>
 </html>

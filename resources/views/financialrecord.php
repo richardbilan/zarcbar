@@ -11,7 +11,7 @@
 
 
 <div class="text-center mt-5">
-    <h1 class="display-4">Web Development - Lab 1 Setup</h1>
+    <h1 class="display-4">Financial Record</h1>
     <p class="lead">This Lab Acitivity is all about installing and creating Laravel project then put to Git repository</p>
 </div>
 
@@ -102,5 +102,18 @@ Even with these challenges, I learned how important routing is for creating smoo
 <a href="https://github.com/miguelnaje/Naje-Lab1.git" class="custom-button" target="_blank">Download Laboratory 1</a>
 <br><br>
 
+
+@endsection
+
+@extends('components.layout') 
+@section('title', 'About Us') 
+
+@section('styles')
+    <link rel='stylesheet' href='https://fonts.googleapis.com/css2?family=Bebas+Neue&amp;family=Figtree:wght@300;600&amp;display=swap'>
+    
+    <link rel="stylesheet" href="{{ asset('styles/.css') }}">
+@endsection
+
+@section('content') 
 
 @endsection

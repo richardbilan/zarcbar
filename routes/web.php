@@ -1,36 +1,46 @@
 <?php
+
 use Illuminate\Support\Facades\Route;
 use Illuminate\Http\Request;
 use App\Http\Middleware\CheckAge;
-use App\Http\Middleware\LogRequests;
+use App\Http\Middleware\LogRequests;    
+use App\Http\Controllers\HomeController;
+use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\AdminController;
 
-// Redirect to login page when accessing root URL
+// Root URL redirects to login page
 Route::get('/', function () {
-    return redirect()->route('login'); // Redirect to login page
+    return redirect()->route('login');
 })->name('home');
 
-// Route for login page
+// Login page route
 Route::get('/login', function () {
     return view('auth.login'); // Ensure this view exists
 })->name('login');
 
-// Handle login submission (add logic to check for guest login)
+// Handle login submission with user_id and user_name
 Route::post('/login', function (Request $request) {
-    $username = $request->input('username');
+    $userId = $request->input('user_id');
+    $userName = $request->input('user_name');
 
-    // Check if user logs in as a guest
-    if ($username === 'guest') {
-        // Redirect guest to the welcome page
-        return redirect()->route('welcome', ['username' => $username]);
+    // Validate that both user ID and name are provided
+    if ($userId && $userName) {
+        // Redirect user to the dashboard with user-specific details
+        return redirect()->route('dashboard.show', ['userId' => $userId, 'username' => $userName]);
+    } else {
+        return back()->withErrors(['error' => 'Please provide both User ID and Name.']);
     }
-
-    // Otherwise, redirect to the dashboard or other page
-    return redirect()->route('dashboard');
 })->name('login.submit');
 
-// Group routes with LogRequests middleware
-Route::middleware([LogRequests::class])->group(function () {
+// Dashboard route with dynamic user ID and middleware
+Route::get('/dashboard/{userId}', [DashboardController::class, 'show'])
+    ->name('dashboard.show')
+    ->middleware('auth');
 
+Route::get('/welcome', [HomeController::class, 'welcome'])->name('welcome');
+
+// Group routes protected by LogRequests middleware
+Route::middleware([LogRequests::class])->group(function () {
     Route::get('/contactus', function () {
         return view('contactus');
     })->name('contact');
@@ -44,32 +54,27 @@ Route::middleware([LogRequests::class])->group(function () {
     });
 
     Route::get('/access-denied', function () {
-        return "Access Denied!";
-    });
+        return "Access Denied! Please log in to access this page. di pa po tapos hehe";
+    })->name('access.denied');
 });
 
-// Views for Labs
-Route::get('/Lab1', function () {
-    return view('Lab1');
-});
-Route::get('/Lab2', function () {
-    return view('Lab2');
-});
-Route::get('/Lab3', function () {
-    return view('Lab3');
-});
-Route::get('/Lab4', function () {
-    return view('Lab4');
+// Admin Routes
+Route::prefix('admin')->group(function () {
+    // Admin route - temporarily redirect to access denied
+    Route::get('/', function () {
+        return redirect()->route('access.denied'); // Redirect to access denied for now
+    })->name('admin.index');
+
+    // Admin Dashboard - also redirect to access denied for now
+    Route::post('/dashboard', function () {
+        return redirect()->route('access.denied'); // Redirect to access denied for now
+    })->name('admin.dashboard');
 });
 
 // Apply CheckAge middleware with a minimum age parameter
 Route::middleware([CheckAge::class . ':18'])->group(function () {
-    Route::get('/welcome', function (Request $request) {
-        $username = $request->query('username');
-        return view('welcome', compact('username'));
-    })->name('welcome');
-
     Route::get('/dashboard', function () {
         return view('dashboard');
     })->name('dashboard');
 });
+

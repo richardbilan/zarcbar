@@ -11,89 +11,47 @@
 @section('content')
 
 <!-- Welcome Message -->
-<div class="row justify-content-center">
-    <div class="col-md-6 text-center mt-5">
-        <h1 class="display-4">Welcome</h1>
-        <p class="lead">Explore my Lab Activities below!</p>
+<div class="container">
+        <header class="header">
+            <h1>Finance Recorder</h1>
+            <div class="buttons">
+              <!--  <a href="{{ Url('login') }}" style="text-decoration: none;">Login</a> -->
+                <a href="{{ url('/') }}" style="text-decoration: none;">Home</a>
+                <a href="{{ url('/about') }}" style="text-decoration: none;">Dashboard </a>
+                <a href="{{ url('/contactus') }}" style="text-decoration: none;">Financial Tracker</a>
+               
+            </div>
+        </header>
+        <div class="content-wrapper"></div>
+        <main class="main-content">
+            <h2>Achieving Your Financial Goals</h2>
+            <p>Take your finances to the next level. Learn to make a budget that works for you, save for things that matter most, and invest with confidence.</p>
+            <div class="track-box">
+                <h3>Track your:</h3>
+                <ul>
+                    <li>✔ Budget</li>
+                    <li>✔ Savings</li>
+                    <li>✔ Expenses</li>
+                </ul>
+            </div>
+            <div class="image-section">
+                <img src="{{ asset('images/finance.jpg') }}" alt="Finance">
+            </div>
+        </main>
+
+        <footer class="footer">
+            <p>Helping you to manage and record your money</p>
+        </footer>
     </div>
-</div>
+
+
 
 <!-- Modal Structure -->
-<div id="loginModal">
+<div id="loginModal" style="display: none;">
     <div class="modal-content">
         <span class="close">&times;</span>
-        <h2 id="modalTitle">Welcome!</h2>
-        <p id="modalMessage"></p>
-    </div>
-</div>
-
-<div class="row mt-5">
-    <!-- Card 1 -->
-    <div class="col-md-3">
-        <div class="outer">
-            <div class="dot"></div>
-            <div class="card1">
-                <div class="ray"></div>
-                <div class="text">Laravel Activity 1</div>
-                <div>Views</div>
-                <a href="{{ url('/Lab1') }}" class="btn btn-primary">Go to Laboratory 1</a>
-                <div class="line topl"></div>
-                <div class="line leftl"></div>
-                <div class="line bottoml"></div>
-                <div class="line rightl"></div>
-            </div>
-        </div>
-    </div>
-
-    <!-- Card 2 -->
-    <div class="col-md-3">
-        <div class="outer">
-            <div class="dot"></div>
-            <div class="card2">
-                <div class="ray"></div>
-                <div class="text">Laravel Activity 2</div>
-                <div>Views</div>
-                <a href="{{ url('/Lab2') }}" class="btn btn-primary">Go to Laboratory 2</a>
-                <div class="line topl"></div>
-                <div class="line leftl"></div>
-                <div class="line bottoml"></div>
-                <div class="line rightl"></div>
-            </div>
-        </div>
-    </div>
-
-    <!-- Card 3 -->
-    <div class="col-md-3">
-        <div class="outer">
-            <div class="dot"></div>
-            <div class="card3">
-                <div class="ray"></div>
-                <div class="text">Laravel Activity 3</div>
-                <div>Views</div>
-                <a href="{{ url('/Lab3') }}" class="btn btn-primary">Go to Laboratory 3</a>
-                <div class="line topl"></div>
-                <div class="line leftl"></div>
-                <div class="line bottoml"></div>
-                <div class="line rightl"></div>
-            </div>
-        </div>
-    </div>
-
-    <!-- Card 4 -->
-    <div class="col-md-3">
-        <div class="outer">
-            <div class="dot"></div>
-            <div class="card4">
-                <div class="ray"></div>
-                <div class="text">Laravel Activity 4</div>
-                <div>Views</div>
-                <a href="{{ url('/Lab4') }}" class="btn btn-primary">Go to Laboratory 4</a>
-                <div class="line topl"></div>
-                <div class="line leftl"></div>
-                <div class="line bottoml"></div>
-                <div class="line rightl"></div>
-            </div>
-        </div>
+        <h2 id="modalTitle">Welcome, <span id="userName"></span>!</h2>
+        <p>Your User ID is <span id="userId"></span>.</p>
     </div>
 </div>
 
@@ -101,13 +59,16 @@
 
 @section('scripts')
 <script>
-    // Function to open the modal and display appropriate greeting
-    function showModal(greetingMessage) {
+    const userId = "{{ $userId }}";  // Pass the userId from the controller to JavaScript
+    const userName = "{{ $userName }}";  // Pass the userName from the controller to JavaScript
+
+    function showModal() {
         const modal = document.getElementById('loginModal');
-        document.getElementById('modalMessage').innerText = greetingMessage;
+        document.getElementById('userName').innerText = userName;  // Set userName in the modal
+        document.getElementById('userId').innerText = userId;  // Set userId in the modal
         modal.style.display = 'block';
 
-        // Close modal when clicking on the close button
+        // Close modal when the close button is clicked
         document.querySelector('.close').addEventListener('click', function() {
             modal.style.display = 'none';
         });
@@ -120,24 +81,11 @@
         }
     }
 
-    // Get URL parameters (e.g., ?username=John&age=25 or ?guest=true)
-    const urlParams = new URLSearchParams(window.location.search);
-    const username = urlParams.get('username');
-    const isGuest = urlParams.get('guest');
-
-    // Set modal content based on user or guest
-    if (username) {
-        const age = urlParams.get('age');
-        showModal(`Welcome, ${username}! You are logged in as ${username}. Enjoy exploring my portfolio.`);
-    } else if (isGuest) {
-        showModal("Welcome, guest!");
+    // Only show the modal if userId and userName are available
+    if (userId && userName) {
+        window.onload = function() {
+            showModal();  // Show the modal with the welcome message
+        };
     }
-
-    // Automatically display the modal on page load
-    window.onload = function() {
-        if (username || isGuest) {
-            document.getElementById('loginModal').style.display = 'block';
-        }
-    };
 </script>
 @endsection
