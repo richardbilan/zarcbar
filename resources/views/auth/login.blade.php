@@ -51,7 +51,7 @@
         window.location.href = '/admin'; // Redirect to admin page
     });
 
-    // Handle the Sign In button click
+    // Sa required fill ini
     document.querySelector('.sign-in .submit').addEventListener('click', function() {
         var userId = document.querySelector('input[name="user_id"]').value;
         var userName = document.querySelector('input[name="user_name"]').value;

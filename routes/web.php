@@ -2,79 +2,64 @@
 
 use Illuminate\Support\Facades\Route;
 use Illuminate\Http\Request;
-use App\Http\Middleware\CheckAge;
-use App\Http\Middleware\LogRequests;    
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\DashboardController;
-use App\Http\Controllers\AdminController;
+use Illuminate\Support\Facades\Auth;
 
-// Root URL redirects to login page
+// Redirect to login page if accessing the root
 Route::get('/', function () {
     return redirect()->route('login');
 })->name('home');
 
-// Login page route
+// Login routes
 Route::get('/login', function () {
-    return view('auth.login'); // Ensure this view exists
+    return view('auth.login');
 })->name('login');
 
-// Handle login submission with user_id and user_name
 Route::post('/login', function (Request $request) {
     $userId = $request->input('user_id');
     $userName = $request->input('user_name');
+    
+    // Simulate login for demonstration (replace with actual login logic)
+    Auth::loginUsingId($userId);
 
-    // Validate that both user ID and name are provided
-    if ($userId && $userName) {
-        // Redirect user to the dashboard with user-specific details
-        return redirect()->route('dashboard.show', ['userId' => $userId, 'username' => $userName]);
-    } else {
-        return back()->withErrors(['error' => 'Please provide both User ID and Name.']);
+    // Debugging output to verify role
+    \Log::info('User ID: ' . Auth::id());  // Logs the user ID
+    \Log::info('User Role: ' . Auth::user()->role);  // Logs the user's role
+
+    // Redirect based on role
+    if (Auth::user()->role === 'admin') {
+        return redirect()->route('dashboard.show', ['userId' => Auth::id()]);
     }
+
+    return redirect()->route('welcome');
 })->name('login.submit');
 
-// Dashboard route with dynamic user ID and middleware
-Route::get('/dashboard/{userId}', [DashboardController::class, 'show'])
-    ->name('dashboard.show')
-    ->middleware('auth');
-
+// Guest access route
 Route::get('/welcome', [HomeController::class, 'welcome'])->name('welcome');
 
-// Group routes protected by LogRequests middleware
-Route::middleware([LogRequests::class])->group(function () {
-    Route::get('/contactus', function () {
-        return view('contactus');
-    })->name('contact');
+// Financial Tracker route (accessible without authentication)
+Route::get('/FinancialTracker', function () {
+    return view('FinancialTracker'); // Ensure FinancialTracker.blade.php exists
+})->name('financial.tracker');
 
-    Route::get('/about', function () {
-        return view('about');
-    })->name('about');
+// Access-denied route for unauthorized access
+Route::get('/access-denied', function () {
+    return view('access-denied'); // Ensure access-denied.blade.php exists
+})->name('access-denied');
 
-    Route::get('/restricted-dashboard', function () {
-        return "Access Restricted!";
-    });
+// Dashboard route restricted to admins only
+Route::get('/dashboard/{userId}', function ($userId) {
+    dd('Dashboard route hit', $userId); // Temporarily dump the userId for debugging
 
-    Route::get('/access-denied', function () {
-        return "Access Denied! Please log in to access this page. di pa po tapos hehe";
-    })->name('access.denied');
-});
+    if (Auth::check() && Auth::user()->role === 'admin') {
+        return app(DashboardController::class)->show($userId);
+    } else {
+        return redirect()->route('access-denied');
+    }
+})->name('dashboard.show');
 
-// Admin Routes
-Route::prefix('admin')->group(function () {
-    // Admin route - temporarily redirect to access denied
-    Route::get('/', function () {
-        return redirect()->route('access.denied'); // Redirect to access denied for now
-    })->name('admin.index');
-
-    // Admin Dashboard - also redirect to access denied for now
-    Route::post('/dashboard', function () {
-        return redirect()->route('access.denied'); // Redirect to access denied for now
-    })->name('admin.dashboard');
-});
-
-// Apply CheckAge middleware with a minimum age parameter
-Route::middleware([CheckAge::class . ':18'])->group(function () {
-    Route::get('/dashboard', function () {
-        return view('dashboard');
-    })->name('dashboard');
-});
-
+// Catch-all route for unauthorized access to any undefined paths within the dashboard
+Route::get('/dashboard/{any}', function () {
+    return redirect()->route('access-denied');
+})->where('any', '.*');

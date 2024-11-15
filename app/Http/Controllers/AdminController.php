@@ -1,21 +1,27 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Middleware;
 
-use Illuminate\Http\Request;
+use Closure;
+use Illuminate\Support\Facades\Auth;
 
-class AdminController extends Controller
+class AdminMiddleware
 {
-    // Show the admin login/dashboard page
-    public function index()
+    /**
+     * Handle an incoming request.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @param  \Closure  $next
+     * @return mixed
+     */
+    public function handle($request, Closure $next)
     {
-        return view('admin.index');  // Replace with your actual admin view
-    }
+        // Check if the user is authenticated and has the "admin" role
+        if (Auth::check() && Auth::user()->role === 'admin') {
+            return $next($request);
+        }
 
-    // Handle the logic after the admin PIN is verified
-    public function dashboard(Request $request)
-    {
-        // Add logic for processing the admin dashboard
-        return view('admin.dashboard');
+        // If not an admin, redirect to access-denied page
+        return redirect()->route('access-denied');
     }
 }

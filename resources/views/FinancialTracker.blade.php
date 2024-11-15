@@ -1,5 +1,5 @@
 
-@section('title', 'Contact Us')
+@section('title', 'Financial Tracker')
 
 @section('styles')
 	<link rel='stylesheet' href='https://fonts.googleapis.com/css2?family=Bebas+Neue&amp;family=Figtree:wght@300;600&amp;display=swap'>
@@ -13,7 +13,8 @@
 @section('title', 'Username - Contact') <!-- This sets the title section -->
 
 @section('content') <!-- This defines the content section -->   
-<
+
+<h1>Financial Tracker to</h1>
     </script>
 @endsection
 

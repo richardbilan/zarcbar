@@ -17,8 +17,8 @@
             <div class="buttons">
               <!--  <a href="{{ Url('login') }}" style="text-decoration: none;">Login</a> -->
                 <a href="{{ url('/') }}" style="text-decoration: none;">Home</a>
-                <a href="{{ url('/about') }}" style="text-decoration: none;">Dashboard </a>
-                <a href="{{ url('/contactus') }}" style="text-decoration: none;">Financial Tracker</a>
+                <a href="{{ url('/dashboard') }}" style="text-decoration: none;">Dashboard </a>
+                <a href="{{ url('/FinancialTracker') }}" style="text-decoration: none;">Financial Tracker</a>
                
             </div>
         </header>
@@ -43,8 +43,6 @@
             <p>Helping you to manage and record your money</p>
         </footer>
     </div>
-
-
 
 <!-- Modal Structure -->
 <div id="loginModal" style="display: none;">
