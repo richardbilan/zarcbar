@@ -16,7 +16,7 @@
 
 <h1>Welcome, {{ $user->username }}</h1>
 <p>User ID: {{ $user->user_id }}</p>
-<p>Email: {{ $user->email }}</p>
+
 
 <script>
     </script>

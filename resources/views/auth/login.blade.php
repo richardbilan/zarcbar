@@ -47,8 +47,8 @@
     <!-- JavaScript -->
     <script>
     // Redirect to the welcome page for admin login
-    document.querySelector('.guest-btn').addEventListener('click', function() {
-        window.location.href = '/admin'; // Redirect to admin page
+    document.querySelector('.admin-btn').addEventListener('click', function() {
+        window.location.href = '/admin.dashboard'; // Redirect to admin page
     });
 
     // Sa required fill ini

@@ -7,7 +7,7 @@
 </head>
 <body>
     <h1>Access Denied!</h1>
-    <p>You do not have permission to access this page.</p>
+    <p>You do not have permission to access this page. only admins can access this page</p>
     <a href="{{ route('home') }}">Go back to Home</a>
 </body>
 </html>
